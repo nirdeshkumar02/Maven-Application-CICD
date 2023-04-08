@@ -3,10 +3,10 @@ pipeline{
     agent any
 
     stages{
-        stage("Git Checkout"){
+        stage('Git Checkout'){
             steps{
                 script{
-                    git branch: 'master' 'https://github.com/nirdeshkumar02/Maven-Application-CICD.git'
+                    git branch: 'master', url: 'https://github.com/nirdeshkumar02/Maven-Application-CICD.git'
                 }
             }
         }
