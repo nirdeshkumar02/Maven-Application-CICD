@@ -1,11 +1,6 @@
 pipeline{
     
-    agent { 
-        node {
-            label 'worker' 
-            customWorkspace '/home/ubuntu/jenkins/workspace/pipelines/'
-        }
-    }
+    agent any
 
     stages{
         stage("Git Checkout"){
