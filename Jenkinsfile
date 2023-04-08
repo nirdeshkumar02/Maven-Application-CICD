@@ -1,3 +1,5 @@
+@Library('maven-app-shared-library') _
+
 pipeline{
     
     agent any
