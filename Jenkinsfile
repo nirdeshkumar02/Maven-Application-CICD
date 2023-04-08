@@ -11,7 +11,6 @@ pipeline{
     }
 
     stages{
-
         stage('Git Checkout'){
             steps{
                 gitCheckout(
@@ -23,6 +22,11 @@ pipeline{
         stage('Maven Unit Test'){
             steps{
                 mvnTest()
+            }
+        }
+        stage('Maven Integration Test'){
+            steps{
+                mvnIntegration()
             }
         }
     }
