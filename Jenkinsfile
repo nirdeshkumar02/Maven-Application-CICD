@@ -2,6 +2,7 @@
 
 pipeline{
 
+/* This way you can run docker as agent or any other jenkins agent:
     agent{
         // Install Docker and Docker Pipeline Plugin to verify docker as agent
         docker {
@@ -9,7 +10,7 @@ pipeline{
             args '-v /root/.m2:/root/.m2'
         }
     }
-
+*/
     stages{
         stage('Git Checkout'){
             steps{
