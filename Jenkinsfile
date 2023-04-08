@@ -1,5 +1,6 @@
 pipeline{
-    
+
+/* This way you can add any agent whether its docker or any jenkins agent
     agent{
         // Install Docker and Docker Pipeline Plugin to verify docker as agent
         docker {
@@ -7,7 +8,7 @@ pipeline{
             args '-v /root/.m2:/root/.m2'
         }
     }
-
+*/
     stages{
         stage('Git Checkout'){
             steps{
@@ -20,6 +21,13 @@ pipeline{
             steps{
                 script{
                     sh 'mvn test'
+                }
+            }
+        }
+        stage('Maven Integration Test'){
+            steps{
+                script{
+                    sh 'mvn verify -DskipUnitTests'
                 }
             }
         }
