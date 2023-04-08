@@ -6,7 +6,10 @@ pipeline{
         stage("Git Checkout"){
             steps{
                 script{
-                    git branch: 'master' 'https://github.com/nirdeshkumar02/Maven-Application-CICD-2.git'
+                    gitCheckout(
+                        branch: "jenkins-shared-lib-pipeline"
+                        url: "https://github.com/nirdeshkumar02/Maven-Application-CICD.git"
+                    )
                 }
             }
         }
