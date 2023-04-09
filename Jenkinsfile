@@ -69,7 +69,7 @@ pipeline{
             }
         }
 
-        stage('Building Maven Package'){
+        stage('Building Maven Package: Maven'){
             when {expression { params.action == 'Create'}} 
             steps{
                 script{
@@ -78,11 +78,20 @@ pipeline{
             }
         }
 
-        stage('Build DockerHub Image'){
+        stage('Build DockerHub Image: Docker'){
             when {expression { params.action == 'Create'}} 
             steps{
                 script{ 
                     dockerBuild("${params.DockerHubUser}", "${params.ImageName}", "${params.ImageTag}")
+                }
+            }
+        }
+
+        stage('Scanning DockerHub Image: Trivy'){
+            when {expression { params.action == 'Create'}} 
+            steps{
+                script{ 
+                    dockerImageScan("${params.DockerHubUser}", "${params.ImageName}")
                 }
             }
         }
