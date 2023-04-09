@@ -27,22 +27,32 @@ pipeline{
                 )
             }
         }
+
         stage('Maven Unit Test'){
             when {expression { params.action == 'create'}} 
             steps{
-                mvnTest()
+                script{
+                    mvnTest()
+                }
             }
         }
+
         stage('Maven Integration Test'){
             when {expression { params.action == 'create'}} 
             steps{
-                mvnIntegration()
+                script{
+                    mvnIntegration()
+                }
             }
         }
+
         stage('SAST Testing - SonarQube'){
             when {expression { params.action == 'create'}} 
             steps{
-                sonarScanner(sonar-creds)
+                script{
+                    def SonarCreds = 'sonar-creds'
+                    sonarScanner(SonarCreds)
+                }
             }
         }
     }
