@@ -3,20 +3,11 @@
 pipeline{
     agent any 
 
-/* This way you can run docker as agent or any other jenkins agent:
-    agent{
-        // Install Docker and Docker Pipeline Plugin to verify docker as agent
-        docker {
-            image 'maven:3.9.0-eclipse-temurin-11' 
-            args '-v /root/.m2:/root/.m2'
-        }
-    }
-*/
     parameters{
         choice(name: 'action', choices: 'Create\nDelete', description: 'Choose Create/Destroy')
-        string(name: 'DockerHubUser', description: "DockerHub UserName", defaultValue: 'nirdeshkumar02')
-        string(name: 'ImageName', description: "Give a name to your docker image", defaultValue: 'maven_app')
-        string(name: 'ImageTag', description: "Give a tag to your docker image", defaultValue: 'v1')
+        string(name: 'AWSAccountId', description: "Give a tag to your docker image", defaultValue: '352709447472')
+        string(name: 'ECRRepoName', description: "Enter Your AWS ECR Repo Name", defaultValue: 'maven-app')
+        string(name: 'ECRRegion', description: "Enter the Region where AWS ECR Repo Exist", defaultValue: 'us-east-1')
     }
 
     stages{
@@ -78,39 +69,38 @@ pipeline{
             }
         }
 
-        stage('Build DockerHub Image: Docker'){
+        stage('Build AWS ECR Image: Docker'){
             when {expression { params.action == 'Create'}} 
             steps{
                 script{ 
-                    dockerImageBuild("${params.DockerHubUser}", "${params.ImageName}", "${params.ImageTag}")
+                    ecrImageBuild("${params.AWSAccountId}", "${params.ECRRepoName}", "${params.ECRRegion}")
                 }
             }
         }
 
-        stage('Scanning DockerHub Image: Trivy'){
+        stage('Scanning ECR Image: Trivy'){
             when {expression { params.action == 'Create'}} 
             steps{
                 script{ 
-                    dockerImageScan("${params.DockerHubUser}", "${params.ImageName}")
+                    ecrImageScan("${params.AWSAccountId}", "${params.ECRRepoName}", "${params.ECRRegion}")
                 }
             }
         }
 
-        stage('DockerHub Image Push: Docker'){
+        stage('ECR Image Push: Docker'){
             when {expression { params.action == 'Create'}} 
             steps{
                 script{ 
-                    def DockerCreds = 'docker-creds'
-                    dockerImagePush(DockerCreds, "${params.DockerHubUser}", "${params.ImageName}", "${params.ImageTag}")
+                    ecrImagePush("${params.AWSAccountId}", "${params.ECRRepoName}", "${params.ECRRegion}")
                 }
             }
         }
 
-        stage('DockerHub Image CleanUP: Docker'){
+        stage('ECR Image CleanUP: Docker'){
             when {expression { params.action == 'Create'}} 
             steps{
                 script{ 
-                    dockerImageCleanup("${params.DockerHubUser}", "${params.ImageName}", "${params.ImageTag}")
+                    ecrImageCleanup("${params.AWSAccountId}", "${params.ECRRepoName}", "${params.ECRRegion}")
                 }
             }
         }
