@@ -19,7 +19,7 @@ pipeline{
     stages{
         stage('Git Checkout'){
             //  When action is create then perform all operation otherwise no operation should be performed
-            when {expression { params.action == 'create'}} 
+            when {expression { params.action == 'Create'}} 
             steps{
                 gitCheckout(
                     branch: "jenkins-shared-lib-pipeline",
@@ -29,7 +29,7 @@ pipeline{
         }
 
         stage('Maven Unit Test'){
-            when {expression { params.action == 'create'}} 
+            when {expression { params.action == 'Create'}} 
             steps{
                 script{
                     mvnTest()
@@ -38,7 +38,7 @@ pipeline{
         }
 
         stage('Maven Integration Test'){
-            when {expression { params.action == 'create'}} 
+            when {expression { params.action == 'Create'}} 
             steps{
                 script{
                     mvnIntegration()
@@ -47,7 +47,7 @@ pipeline{
         }
 
         stage('SAST Testing - SonarQube'){
-            when {expression { params.action == 'create'}} 
+            when {expression { params.action == 'Create'}} 
             steps{
                 script{
                     def SonarCreds = 'sonar-creds'
@@ -57,7 +57,7 @@ pipeline{
         }
 
         stage('Quality Gate Status Checking - SonarQube'){
-            when {expression { params.action == 'create'}} 
+            when {expression { params.action == 'Create'}} 
             steps{
                 script{
                     def SonarCreds = 'sonar-creds'
@@ -67,7 +67,7 @@ pipeline{
         }
 
         stage('Building Maven Package'){
-            when {expression { params.action == 'create'}} 
+            when {expression { params.action == 'Create'}} 
             steps{
                 script{
                     mvnBuild()
