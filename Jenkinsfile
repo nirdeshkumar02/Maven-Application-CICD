@@ -1,5 +1,7 @@
 pipeline{
 
+    agent any
+
 /* This way you can add any agent whether its docker or any jenkins agent
     agent{
         // Install Docker and Docker Pipeline Plugin to verify docker as agent
