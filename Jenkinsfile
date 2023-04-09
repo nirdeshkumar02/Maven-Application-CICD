@@ -82,7 +82,7 @@ pipeline{
             when {expression { params.action == 'Create'}} 
             steps{
                 script{ 
-                    dockerBuild("${params.DockerHubUser}", "${params.ImageName}", "${params.ImageTag}")
+                    dockerImageBuild("${params.DockerHubUser}", "${params.ImageName}", "${params.ImageTag}")
                 }
             }
         }
@@ -102,6 +102,15 @@ pipeline{
                 script{ 
                     def DockerCreds = 'docker-creds'
                     dockerImagePush(DockerCreds, "${params.DockerHubUser}", "${params.ImageName}", "${params.ImageTag}")
+                }
+            }
+        }
+        stage('DockerHub Image CleanUP: Docker'){
+            when {expression { params.action == 'Create'}} 
+            steps{
+                script{ 
+                    def DockerCreds = 'docker-creds'
+                    dockerImageCleanup("${params.DockerHubUser}", "${params.ImageName}", "${params.ImageTag}")
                 }
             }
         }
