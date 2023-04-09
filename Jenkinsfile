@@ -109,7 +109,6 @@ pipeline{
             when {expression { params.action == 'Create'}} 
             steps{
                 script{ 
-                    def DockerCreds = 'docker-creds'
                     dockerImageCleanup("${params.DockerHubUser}", "${params.ImageName}", "${params.ImageTag}")
                 }
             }
