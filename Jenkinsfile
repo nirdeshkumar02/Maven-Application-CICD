@@ -12,8 +12,14 @@ pipeline{
         }
     }
 */
+    parameters{
+        choice(name: 'action', choices: 'create\ndelete', description: 'Choose Create/Destroy')
+    }
+
     stages{
         stage('Git Checkout'){
+            //  When action is create then perform all operation otherwise no operation should be performed
+            when {expression { params.action == 'create'}} 
             steps{
                 gitCheckout(
                     branch: "jenkins-shared-lib-pipeline",
@@ -22,13 +28,21 @@ pipeline{
             }
         }
         stage('Maven Unit Test'){
+            when {expression { params.action == 'create'}} 
             steps{
                 mvnTest()
             }
         }
         stage('Maven Integration Test'){
+            when {expression { params.action == 'create'}} 
             steps{
                 mvnIntegration()
+            }
+        }
+        stage('SAST Testing - SonarQube'){
+            when {expression { params.action == 'create'}} 
+            steps{
+                sonarScanner(sonar-creds)
             }
         }
     }
