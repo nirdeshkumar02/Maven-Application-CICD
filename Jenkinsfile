@@ -13,7 +13,7 @@ pipeline{
     }
 */
     parameters{
-        choice(name: 'action', choices: 'create\ndelete', description: 'Choose Create/Destroy')
+        choice(name: 'action', choices: 'Create\nDelete', description: 'Choose Create/Destroy')
     }
 
     stages{
@@ -62,6 +62,15 @@ pipeline{
                 script{
                     def SonarCreds = 'sonar-creds'
                     sonarQualityGate(SonarCreds)
+                }
+            }
+        }
+
+        stage('Building Maven Package'){
+            when {expression { params.action == 'create'}} 
+            steps{
+                script{
+                    mvnBuild()
                 }
             }
         }
