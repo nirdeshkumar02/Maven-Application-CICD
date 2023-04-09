@@ -55,5 +55,15 @@ pipeline{
                 }
             }
         }
+
+        stage('Quality Gate Status Checking - SonarQube'){
+            when {expression { params.action == 'create'}} 
+            steps{
+                script{
+                    def SonarCreds = 'sonar-creds'
+                    sonarQualityGate(SonarCreds)
+                }
+            }
+        }
     }
 }
