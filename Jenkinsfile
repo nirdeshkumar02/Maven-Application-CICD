@@ -1,6 +1,7 @@
 @Library('maven-app-shared-library') _
 
 pipeline{
+    agent any 
 
 /* This way you can run docker as agent or any other jenkins agent:
     agent{
