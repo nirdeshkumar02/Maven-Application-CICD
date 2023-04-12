@@ -104,6 +104,16 @@ pipeline{
             }
         }
 
+        stage('DockerHub Login: Docker'){
+            when {expression { params.action == 'Create'}} 
+            steps{
+                script{ 
+                    def DockerCreds = 'docker-creds'
+                    dockerLogin(DockerCreds)
+                }
+            }
+        }
+
         stage('DockerHub Image Push: Docker'){
             when {expression { params.action == 'Create'}} 
             steps{
