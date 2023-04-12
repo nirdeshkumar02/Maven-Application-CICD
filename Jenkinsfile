@@ -1,7 +1,6 @@
 @Library('maven-app-shared-library') _
 
 pipeline{
-    agent any 
 
 /* This way you can run docker as agent or any other jenkins agent:
     agent{
@@ -12,6 +11,15 @@ pipeline{
         }
     }
 */
+
+    // This way you can run jenkins slave as agent or any other jenkins agent:
+    agent{
+        node {
+            label 'slave'
+            customWorkspace '/home/ubuntu/jenkins'
+        }
+    }
+    
     parameters{
         choice(name: 'action', choices: 'Create\nDelete', description: 'Choose Create/Destroy')
         string(name: 'DockerHubUser', description: "DockerHub UserName", defaultValue: 'nirdeshkumar02')
