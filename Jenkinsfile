@@ -19,7 +19,7 @@ pipeline{
             customWorkspace '/home/ubuntu/jenkins'
         }
     }
-    
+
     parameters{
         choice(name: 'action', choices: 'Create\nDelete', description: 'Choose Create/Destroy')
         string(name: 'DockerHubUser', description: "DockerHub UserName", defaultValue: 'nirdeshkumar02')
@@ -108,8 +108,7 @@ pipeline{
             when {expression { params.action == 'Create'}} 
             steps{
                 script{ 
-                    def DockerCreds = 'docker-creds'
-                    dockerImagePush(DockerCreds, "${params.DockerHubUser}", "${params.ImageName}", "${params.ImageTag}")
+                    dockerImagePush("${params.DockerHubUser}", "${params.ImageName}", "${params.ImageTag}")
                 }
             }
         }
