@@ -8,6 +8,7 @@ pipeline{
         string(name: 'AWSAccountId', description: "Give a tag to your docker image", defaultValue: '352709447472')
         string(name: 'ECRRepoName', description: "Enter Your AWS ECR Repo Name", defaultValue: 'maven-app')
         string(name: 'Region', description: "Enter the Region where AWS create resources", defaultValue: 'us-east-1')
+        string(name: 'EKSCluster', description: "name of the EKS Cluster", defaultValue: 'cicd-cluster')
     }
 
     environment{
@@ -117,6 +118,15 @@ pipeline{
                     dir('eks_cluster') {
                         terraformCreate("${ACCESS_KEY}", "${SECRET_KEY}", "${params.Region}")
                     }
+                }
+            }
+        }
+
+        stage('Connect to EKS Cluster - aws-cli'){
+            when {expression { params.action == 'Create'}} 
+            steps{
+                script{ 
+                    connectEKS("${ACCESS_KEY}", "${SECRET_KEY}", "${params.Region}", "${params.EKSCluster}")
                 }
             }
         }
