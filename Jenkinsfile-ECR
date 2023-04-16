@@ -7,7 +7,12 @@ pipeline{
         choice(name: 'action', choices: 'Create\nDelete', description: 'Choose Create/Destroy')
         string(name: 'AWSAccountId', description: "Give a tag to your docker image", defaultValue: '352709447472')
         string(name: 'ECRRepoName', description: "Enter Your AWS ECR Repo Name", defaultValue: 'maven-app')
-        string(name: 'ECRRegion', description: "Enter the Region where AWS ECR Repo Exist", defaultValue: 'us-east-1')
+        string(name: 'Region', description: "Enter the Region where AWS create resources", defaultValue: 'us-east-1')
+    }
+
+    environment{
+        ACCESS_KEY = credentials('AWS_ACCESS_KEY_ID')
+        SECRET_KEY = credentials('AWS_SECRET_KEY_ID')
     }
 
     stages{
@@ -73,7 +78,7 @@ pipeline{
             when {expression { params.action == 'Create'}} 
             steps{
                 script{ 
-                    ecrImageBuild("${params.AWSAccountId}", "${params.ECRRepoName}", "${params.ECRRegion}")
+                    ecrImageBuild("${params.AWSAccountId}", "${params.ECRRepoName}", "${params.Region}")
                 }
             }
         }
@@ -82,7 +87,7 @@ pipeline{
             when {expression { params.action == 'Create'}} 
             steps{
                 script{ 
-                    ecrImageScan("${params.AWSAccountId}", "${params.ECRRepoName}", "${params.ECRRegion}")
+                    ecrImageScan("${params.AWSAccountId}", "${params.ECRRepoName}", "${params.Region}")
                 }
             }
         }
@@ -91,7 +96,7 @@ pipeline{
             when {expression { params.action == 'Create'}} 
             steps{
                 script{ 
-                    ecrImagePush("${params.AWSAccountId}", "${params.ECRRepoName}", "${params.ECRRegion}")
+                    ecrImagePush("${params.AWSAccountId}", "${params.ECRRepoName}", "${params.Region}")
                 }
             }
         }
@@ -100,7 +105,18 @@ pipeline{
             when {expression { params.action == 'Create'}} 
             steps{
                 script{ 
-                    ecrImageCleanup("${params.AWSAccountId}", "${params.ECRRepoName}", "${params.ECRRegion}")
+                    ecrImageCleanup("${params.AWSAccountId}", "${params.ECRRepoName}", "${params.Region}")
+                }
+            }
+        }
+
+        stage('Create EKS Cluster - Terraform'){
+            when {expression { params.action == 'Create'}} 
+            steps{
+                script{ 
+                    dir('eks_cluster') {
+                        terraformCreate("${ACCESS_KEY}", "${SECRET_KEY}", "${params.Region}")
+                    }
                 }
             }
         }
