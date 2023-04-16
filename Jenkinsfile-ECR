@@ -130,5 +130,45 @@ pipeline{
                 }
             }
         }
+
+        stage('Deployment to EKS Cluster - kubectl'){
+            when {expression { params.action == 'Create'}} 
+            steps{
+                script{ 
+                    def apply = false
+                    try{
+                        input message: 'please confirm to deploy on eks', ok: 'Ready to apply the config ?'
+                        apply = true
+                    }
+                    catch(err){
+                        apply= false
+                        currentBuild.result  = 'UNSTABLE'
+                    }
+                    if(apply){
+                        appDeployment()
+                    }
+                }
+            }
+        }
+
+        stage('Delete EKS App Deployment - Kubectl'){
+            when {expression { params.action == 'Delete'}} 
+            steps{
+                script{ 
+                    appDestroy()
+                }
+            }
+        }
+
+        stage('Delete EKS Cluster - Terraform'){
+            when {expression { params.action == 'Delete'}} 
+            steps{
+                script{ 
+                    dir('eks_cluster') {
+                        terraformDestroy("${ACCESS_KEY}", "${SECRET_KEY}", "${params.Region}")
+                    }
+                }
+            }
+        }
     }
 }
