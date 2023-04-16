@@ -6,4 +6,4 @@ variable "kubernetes_version" {}
 
 variable "subnet_ids" {}
 
-variable "eks_cluster_tags" {}
+variable "tags" {}

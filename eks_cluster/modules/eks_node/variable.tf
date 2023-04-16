@@ -8,4 +8,4 @@ variable "subnet_ids" {}
 
 variable "kubernetes_version" {}
 
-variable "eks_node_tags" {}
+variable "tags" {}

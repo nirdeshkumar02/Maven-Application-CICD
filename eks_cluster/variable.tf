@@ -1,5 +1,6 @@
 variable "region" {
   description = "Please Provide the AWS Region where you want to deploy."
+  default = "us-east-1"
 }
 
 variable "access_key" {
@@ -10,29 +11,6 @@ variable "secret_key" {
   description = "Please Provide the AWS secret key associate with above access key."
 }
 
-variable "eks_cluster_role_name" {}
+variable "aws_eks_cluster_config" {}
 
-variable "eks_cluster_name" {}
-
-variable "eks_cluster_tags" {}
-
-variable "kubernetes_version" {}
-
-variable "subnet_ids" {}
-
-variable "eks_node_role_name" {}
-
-variable "eks_node_group_name" {}
-
-variable "eks_node_tags" {}
-
-
-
-
-
-
-
-
-
-
-
+variable "eks_node_group_config" {}
